@@ -1,0 +1,143 @@
+---
+stages:
+  - setup
+  - test
+  - build
+  - deploy
+
+variables:
+  GROUP_NAME: "Nova"
+  PROJECT_NAME: "lct-summer-med"
+  REGISTRY: "${CI_REGISTRY}"
+  IMAGE_FULL_NAME: "${CI_REGISTRY_IMAGE}"
+  COMPOSE_PROJECT_NAME: "${PROJECT_NAME}-${CI_PIPELINE_IID}-${CI_JOB_NAME_SLUG}"
+  NOVA_CI_IMAGE: $CI_REGISTRY_IMAGE/ci:$CI_COMMIT_REF_SLUG
+  NOVA_CI_IMAGE_LIMIT: 1000MiB
+  NOVA_BUILD_IMAGE: $CI_REGISTRY_IMAGE/wip:$CI_COMMIT_REF_SLUG
+  NOVA_BUILD_IMAGE_LIMIT: 1100MiB
+  # Необходимый процент покрытия кода
+  COVERAGE_PERCENT: 0
+
+# Base scripts
+# ============
+.base:
+  image: ghub.letsnova.com/nova/devops/docker-runner:latest
+  variables:
+    DOCKER_DRIVER: overlay2
+    DOCKER_BUILDKIT: 1
+  tags:
+    - docker
+  before_script: &docker-before-script
+    - env
+    # Making sure we are in the right directory, does nothing by default:
+    - pwd && echo "$CI_PROJECT_DIR" && cd "$CI_PROJECT_DIR"
+    # Creating `.env` configuration file:
+    - dump-env -t config/.env.template -p 'SECRET_' > config/.env
+    # Login into Docker registry:
+    - echo "$CI_JOB_TOKEN" | docker login "$REGISTRY"
+      -u gitlab-ci-token --password-stdin
+    # Debug information:
+    - docker info && docker-compose --version && git --version
+
+  interruptible: true
+
+CI image:
+  extends: .base
+  stage: setup
+  script:
+    # Checking config:
+    - docker-compose -f docker-compose.ci.yml config --quiet
+
+    # Забираем свежую версию образа, чтобы работало кэширование слоёв
+    - docker-compose -f docker-compose.ci.yml pull
+      || echo "Это первая сборка для $NOVA_CI_IMAGE"
+
+    - docker-compose -f docker-compose.ci.yml build
+
+    - docker image history "${NOVA_CI_IMAGE}"
+    - docker images "${NOVA_CI_IMAGE}"
+    - disl "${NOVA_CI_IMAGE}" ${NOVA_CI_IMAGE_LIMIT}
+    # Pushing back the result for future runs:
+    - docker push "${NOVA_CI_IMAGE}"
+
+# Test scripts
+# ============
+
+.test:
+  stage: test
+  extends: .base
+  script:
+    # Забираем свежую версию образа
+    - docker-compose -f docker-compose.ci.yml pull
+    # Checking config:
+    - docker-compose -f docker-compose.ci.yml config --quiet
+
+    # The logic itself:
+    - docker-compose -f docker-compose.ci.yml run
+      --user=root --rm web sh ./docker/ci.sh ${COMMAND}
+  after_script:
+    - docker-compose -f docker-compose.ci.yml down
+      --remove-orphans --volumes
+  variables:
+    COMMAND: echo "is abstract stage"
+
+# Running tests:
+#pytest:
+#  extends: .test
+#  variables:
+#    COMMAND: |
+#      pytest &&
+#      pytest --junitxml=report.xml --cov=server/apps --cov=tests --cov-branch
+#      --cov-report=term-missing:skip-covered
+#      --cov-fail-under=${COVERAGE_PERCENT}
+#      --cov-report xml:coverage.xml
+#  coverage: "/TOTAL.+ ([0-9]{1,3}%)/"
+#  artifacts:
+#    when: always
+#    reports:
+#      junit: report.xml
+
+# Run checks to be sure we follow all django's best practices:
+django check:
+  extends: .test
+  variables:
+    COMMAND: python manage.py check --fail-level WARNING
+
+Build:
+  extends: .base
+  stage: build
+  script:
+    # Checking config:
+    - docker-compose
+      -f docker-compose.build.yml config --quiet
+
+    # Забираем свежую версию образа, чтобы работало кэширование слоёв
+    - docker-compose -f docker-compose.build.yml pull --ignore-pull-failures
+
+    - docker-compose -f docker-compose.build.yml build
+
+    - docker image history "${NOVA_BUILD_IMAGE}"
+    - docker images "${NOVA_BUILD_IMAGE}"
+    - disl ${NOVA_BUILD_IMAGE} ${NOVA_BUILD_IMAGE_LIMIT}
+    # Pushing back the result for future runs:
+    - docker push ${NOVA_BUILD_IMAGE}
+
+.deploy:
+  image: $CI_REGISTRY/nova/docker-ssh:latest
+  stage: deploy
+  tags:
+    - docker
+  before_script:
+    - eval $(ssh-agent -s)
+    - ssh-add <(cat $SSH_PRIVATE_KEY)
+  script:
+    - ssh $SSH_HOST "cd $DOCKER_COMPOSE_DIR && docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY &&  docker compose pull web"
+    - ssh $SSH_HOST "cd $DOCKER_COMPOSE_DIR && docker compose run --rm web provision"
+    - ssh $SSH_HOST "cd $DOCKER_COMPOSE_DIR && docker compose up down && docker compose up -d"
+
+deploy:
+  extends: .deploy
+  environment:
+    name: main
+  only:
+    - main

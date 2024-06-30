@@ -1,0 +1,27 @@
+---
+
+# Данный docker-compose файл предназначен для сборки production образа
+#
+# Instead, it should be a part of your deploy strategy.
+# This setup is supposed to be used with `docker-swarm`.
+# See `./docs/pages/template/production.rst` docs.
+
+version: "3.6"
+services:
+  web:
+    <<: &web
+      # Image for production:
+      image: ${NOVA_BUILD_IMAGE:-ghub.letsnova.com/lct/summer/med/wip}
+      build:
+        target: production_build
+        context: .
+        dockerfile: ./docker/django/Dockerfile
+        args:
+          DJANGO_ENV: production
+          NOVA_BUILD_ID: "${CI_PIPELINE_IID:-No CI}"
+          NOVA_RELEASE: "${CI_BUILD_TAG:-No release image}"
+          NOVA_PIPELINE_URL: "${CI_PIPELINE_URL:-No CI}"
+
+      restart: unless-stopped
+
+    command: sh ./docker/django/gunicorn.sh
