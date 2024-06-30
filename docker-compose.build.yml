@@ -11,7 +11,7 @@ services:
   web:
     <<: &web
       # Image for production:
-      image: ${NOVA_BUILD_IMAGE:-ghub.letsnova.com/lct/summer/med/wip}
+      image: ${NOVA_BUILD_IMAGE}
       build:
         target: production_build
         context: .

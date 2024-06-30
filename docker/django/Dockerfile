@@ -1,10 +1,10 @@
 # This Dockerfile uses multi-stage build to customize DEV and PROD images:
 # https://docs.docker.com/develop/develop-images/multistage-build/
 
-FROM hub.letsnova.com/p/python:3.11-slim-bookworm AS base_build
+FROM python:3.11-slim-bookworm AS base_build
 
-LABEL maintainer="dolma@tech.ru"
-LABEL vendor="dolma"
+LABEL maintainer="afaneor@gmail.com"
+LABEL vendor="npavlin"
 
 ENV \
   # build:

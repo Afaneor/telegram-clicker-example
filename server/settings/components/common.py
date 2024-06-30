@@ -97,7 +97,7 @@ WSGI_APPLICATION = 'server.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': config('POSTGRES_DB', default='dolma'),
+        'NAME': config('POSTGRES_DB', default='clicker'),
         'USER': config('POSTGRES_USER', default='postgres'),
         'PASSWORD': config('POSTGRES_PASSWORD', default=''),
         'HOST': config('DJANGO_DATABASE_HOST', default='localhost'),

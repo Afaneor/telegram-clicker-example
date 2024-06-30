@@ -1,7 +1,7 @@
 [tool.poetry]
-authors = ["DOLMA <tech@dolma.ru>"]
-description = "This is backend project for dolma"
-name = "dolma_backend"
+authors = ["Nikolay Pavlin"]
+description = "This is backend project for clicker"
+name = "clicker_backend"
 version = "0.0.0"
 
 [tool.poetry.dependencies]

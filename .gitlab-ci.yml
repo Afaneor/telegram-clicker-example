@@ -21,7 +21,7 @@ variables:
 # Base scripts
 # ============
 .base:
-  image: ghub.letsnova.com/nova/devops/docker-runner:latest
+  image: CHANGE_ME
   variables:
     DOCKER_DRIVER: overlay2
     DOCKER_BUILDKIT: 1
