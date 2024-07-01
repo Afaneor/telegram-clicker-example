@@ -55,3 +55,4 @@ class User(  # type: ignore
             ts = int(datetime.utcnow().timestamp())
             self.last_balance_update = int(ts)
             self.last_claimed = int(ts)
+        super().save(*args, **kwargs)
