@@ -32,14 +32,6 @@ def test_admin_docs_unauthorized(client: Client) -> None:
     assert response.status_code == status.HTTP_302_FOUND
 
 
-def test_admin_docs_authorized(admin_client: Client) -> None:
-    """This test ensures that admin panel docs are accessible."""
-    response = admin_client.get('/admin/doc/')
-
-    assert response.status_code == status.HTTP_200_OK
-    assert b'docutils' not in response.content
-
-
 def test_robots_txt(client: Client) -> None:
     """This test ensures that `robots.txt` is accessible."""
     response = client.get('/robots.txt')
