@@ -14,9 +14,9 @@ from django.contrib import admin
 from django.urls import include, path
 from health_check import urls as health_urls
 
+from server.apps.game.api.routers import router as game_router
 from server.apps.services.custom_router.api_router import router
 from server.apps.user.api.routers import router as user_router
-from server.apps.game.api.routers import router as game_router
 from server.url_components import (
     admin_urlpatterns,
     docs_urlpatterns,

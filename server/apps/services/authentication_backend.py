@@ -2,12 +2,12 @@ import hashlib
 import hmac
 import time
 
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.backends import BaseBackend
+from django.utils.translation import gettext_lazy as _
 from rest_framework import status
 from rest_framework.exceptions import APIException
-from django.utils.translation import gettext_lazy as _
-from django.conf import settings
 
 User = get_user_model()
 

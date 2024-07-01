@@ -1,10 +1,14 @@
+from typing import TYPE_CHECKING
+
 from django.db import transaction
 
 from server.apps.game.models.income_item import IncomeItem, UserIncomeItem
 from server.apps.game.services.api.user import UserAPI
-from server.apps.game.services.errors import AlreadyBoughtError, NoItemForUserError, NotEnoughMoneyError
-
-from typing import TYPE_CHECKING
+from server.apps.game.services.errors import (
+    AlreadyBoughtError,
+    NoItemForUserError,
+    NotEnoughMoneyError,
+)
 
 if TYPE_CHECKING:
     from server.apps.user.models import User

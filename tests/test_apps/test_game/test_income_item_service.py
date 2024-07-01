@@ -1,6 +1,11 @@
 import pytest
+
 from server.apps.game.models import UserIncomeItem
-from server.apps.game.services.errors import AlreadyBoughtError, NotEnoughMoneyError, NoItemForUserError
+from server.apps.game.services.errors import (
+    AlreadyBoughtError,
+    NoItemForUserError,
+    NotEnoughMoneyError,
+)
 
 
 @pytest.mark.django_db

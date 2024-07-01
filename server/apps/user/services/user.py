@@ -2,6 +2,7 @@ from datetime import datetime
 
 from django.db.models import F, Sum
 from django.db.models.functions import Power
+
 from server.apps.user.models import User
 
 

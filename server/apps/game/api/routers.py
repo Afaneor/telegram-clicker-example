@@ -1,8 +1,8 @@
 from rest_framework.routers import APIRootView
 
-from server.apps.services.custom_router.api_router import ApiRouter
 from server.apps.game.api.views.income_item import IncomeItemViewSet
 from server.apps.game.api.views.promo import PromoViewSet
+from server.apps.services.custom_router.api_router import ApiRouter
 
 
 class GameAPIView(APIRootView):

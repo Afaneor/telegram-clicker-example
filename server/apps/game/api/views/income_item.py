@@ -1,4 +1,4 @@
-from django.db.models import QuerySet, Prefetch
+from django.db.models import Prefetch, QuerySet
 from rest_framework.decorators import action
 from rest_framework.mixins import ListModelMixin
 from rest_framework.response import Response

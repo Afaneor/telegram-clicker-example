@@ -1,8 +1,9 @@
-import pytest
-from server.apps.user.services.user import UserService
-from server.apps.user.models import User
 from datetime import datetime, timedelta
 from unittest.mock import patch
+
+import pytest
+
+from server.apps.user.services.user import UserService
 
 
 @pytest.mark.django_db

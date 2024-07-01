@@ -1,6 +1,6 @@
 from django.db import transaction
-from rest_framework.exceptions import APIException
 from django.utils.translation import gettext_lazy as _
+from rest_framework.exceptions import APIException
 
 from server.apps.game.models import Promo
 from server.apps.user.models import User

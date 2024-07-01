@@ -7,9 +7,7 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 
 from server.apps.services.views import RetrieveListUpdateViewSet
-from server.apps.user.api.serializers import (
-    UserSerializer,
-)
+from server.apps.user.api.serializers import UserSerializer
 from server.apps.user.models import User
 
 

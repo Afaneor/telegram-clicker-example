@@ -1,5 +1,6 @@
 from django.contrib import admin
-from server.apps.game.models import IncomeItem, UserIncomeItem, Promo
+
+from server.apps.game.models import IncomeItem, Promo, UserIncomeItem
 
 
 @admin.register(IncomeItem)
