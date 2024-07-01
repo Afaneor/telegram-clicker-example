@@ -14,7 +14,8 @@ class AlreadyClaimedError(APIException):
 
 class PromoService(object):
 
-    def claim(self, promo: Promo, user: User):
+    @staticmethod
+    def claim(promo: Promo, user: User):
         """Метод для активации промо."""
         if promo.users_claimed.filter(id=user.id).exists():
             raise AlreadyClaimedError()
