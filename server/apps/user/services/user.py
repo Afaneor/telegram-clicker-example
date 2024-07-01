@@ -5,7 +5,6 @@ from django.db.models.functions import Power
 from server.apps.user.models import User
 
 
-
 class UserService:
     """Сервис для работы с пользователями."""
     @staticmethod
@@ -17,7 +16,7 @@ class UserService:
             income=F('item__base_income') * Power(F('item__income_multiplier'), F('level')) * seconds_passed
         ).aggregate(
             total_income=Sum('income')
-        )['total_income']
+        )['total_income'] or 0
         return user.balance + int(income)
 
     @staticmethod
