@@ -7,7 +7,7 @@ class UserAPI(object):
             self.service = UserService
 
     def claim(self, user):
-        self.service.claim(user)
+        return self.service.claim(user)
 
     def get_user_available_balance(self, user):
-        self.service.get_user_available_balance(user)
+        return self.service.get_user_available_balance(user)
