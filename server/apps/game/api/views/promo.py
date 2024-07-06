@@ -1,3 +1,4 @@
+from django.db.models import Exists, OuterRef
 from rest_framework.decorators import action
 from rest_framework.mixins import ListModelMixin
 from rest_framework.response import Response
@@ -18,6 +19,13 @@ class PromoViewSet(
 
     queryset = Promo.objects.filter(visible=True)
     serializer_class = PromoSerializer
+
+    def list(self, request, *args, **kwargs):
+        user = request.user
+        queryset = self.filter_queryset(self.get_queryset())
+        queryset = queryset.annotate(claimed=Exists(user.promos_claimed.filter(pk=OuterRef('pk'))))
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
     @action(detail=True, methods=['post'])
     def claim(self, request, *args, **kwargs):

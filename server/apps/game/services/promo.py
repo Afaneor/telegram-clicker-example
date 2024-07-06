@@ -15,7 +15,7 @@ class AlreadyClaimedError(APIException):
 class PromoService(object):
 
     @staticmethod
-    def claim(promo: Promo, user: User):
+    def claim(promo: Promo, user: User) -> int:
         """Метод для активации промо."""
         if promo.users_claimed.filter(id=user.id).exists():
             raise AlreadyClaimedError()
@@ -25,3 +25,4 @@ class PromoService(object):
             user.save()
             # TODO можно сделать классы для валидации, что человек что-то сделал и т.д.
             promo.users_claimed.add(user)
+        return user.balance
