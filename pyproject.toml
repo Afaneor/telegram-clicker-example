@@ -56,7 +56,7 @@ django-anymail = { extras = ["sendgrid"], version = "^9.0" }
 djangorestframework = "^3.15"  # https://github.com/encode/django-rest-framework
 drf-extensions = "^0.7.1"  # https://github.com/chibisov/drf-extensions
 
-gunicorn = "^20.1"  # https://pypi.org/project/gunicorn/
+gunicorn = "^22.0"  # https://pypi.org/project/gunicorn/
 phonenumbers = "^8.13.3"  # https://github.com/daviddrysdale/python-phonenumbers
 psycopg2-binary = "*" # https://github.com/psycopg/psycopg2
 sentry-sdk = "^1.12.1"  # https://github.com/getsentry/sentry-python
