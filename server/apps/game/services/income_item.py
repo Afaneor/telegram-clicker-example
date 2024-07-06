@@ -16,7 +16,7 @@ if TYPE_CHECKING:
 
 class IncomeItemService(object):
     """Бизнес логика для IncomeItem."""
-    def buy(self, income_item: IncomeItem, user: 'User'):
+    def buy(self, income_item: IncomeItem, user: 'User') -> int:
         """Метод для покупки предмета."""
         if self._get_user_item(income_item, user):
             raise AlreadyBoughtError()
@@ -36,8 +36,9 @@ class IncomeItemService(object):
                 item=income_item,
                 level=1,
             )
+        return user.balance
 
-    def upgrade(self, income_item: IncomeItem, user: 'User'):
+    def upgrade(self, income_item: IncomeItem, user: 'User') -> int:
         """Метод для улучшения предмета."""
         user_item = self._get_user_item(income_item, user)
         if not user_item:
@@ -55,6 +56,7 @@ class IncomeItemService(object):
 
             user_item.level += 1
             user_item.save()
+        return user.balance
 
     @staticmethod
     def _get_user_item(income_item: IncomeItem, user: 'User') -> UserIncomeItem | None:

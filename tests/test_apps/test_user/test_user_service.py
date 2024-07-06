@@ -7,8 +7,8 @@ from server.apps.user.services.user import UserService
 
 
 @pytest.mark.django_db
-def test_get_user_available_balance_with_no_income_items(user_income_item):
-    user = user_income_item.user
+def test_get_user_available_balance_with_no_income_items(create_user):
+    user = create_user()
     balance = UserService.get_user_available_balance(user)
     assert balance == 100
 

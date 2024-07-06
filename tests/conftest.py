@@ -16,13 +16,6 @@ def api_client():
     return client
 
 
-@pytest.fixture
-def user_api_client(user):
-    client = APIClient()
-    client.force_authenticate(user=user)
-    return client
-
-
 @pytest.fixture(autouse=True)
 def _media_root(settings, tmpdir_factory) -> None:
     """Forces django to save media files into temp folder."""
@@ -51,6 +44,6 @@ def _password_hashers(settings) -> None:
 @pytest.fixture(autouse=True)
 def _debug(settings) -> None:
     """Sets proper DEBUG and TEMPLATE debug mode for coverage."""
-    settings.DEBUG = False
+    settings.DEBUG = True
     for template in settings.TEMPLATES:
         template['OPTIONS']['debug'] = True
