@@ -37,4 +37,5 @@ class UserSerializer(ModelSerializerWithPermission):
             'last_claimed',
             'last_balance_update',
             'balance',
+            'referrals',
         )
