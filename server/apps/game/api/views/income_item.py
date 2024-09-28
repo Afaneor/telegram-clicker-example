@@ -38,6 +38,7 @@ class IncomeItemViewSet(
     @action(
         detail=True,
         methods=['post'],
+        url_path='buy',
     )
     def buy(self, request, *args, **kwargs):
         user = request.user
@@ -48,6 +49,7 @@ class IncomeItemViewSet(
     @action(
         detail=True,
         methods=['post'],
+        url_path='upgrade',
     )
     def upgrade(self, request, *args, **kwargs):
         user = request.user
