@@ -40,7 +40,7 @@ class TelegramAuthBackend(BaseBackend):
 
             # Извлечение или создание пользователя
             user = json.loads(auth_data.get('user', '{}'))
-            username = user.get('username')
+            username = user.get('id')
             if not username:
                 return None
 
