@@ -33,7 +33,7 @@ class User(  # type: ignore
     last_balance_update = models.IntegerField(
         verbose_name=_('Последнее обновление баланса (клики), unix timestamp'),
     )
-    balance = models.IntegerField(
+    balance = models.BigIntegerField(
         verbose_name=_('Баланс'),
         default=0,
     )
