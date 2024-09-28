@@ -59,7 +59,7 @@ class UserViewSet(RetrieveListUpdateViewSet):
         """
         user = request.user
 
-        if user.is_anonymous():
+        if user.is_anonymous:
             auth_data = request.query_params
             user = authenticate(request, **auth_data)
 
