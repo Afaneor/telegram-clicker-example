@@ -11,8 +11,9 @@ files serving technique in development.
 
 from django.conf import settings
 from django.contrib import admin
-from django.urls import include, path
+from django.urls import include, path, re_path
 from health_check import urls as health_urls
+from revproxy.views import ProxyView
 
 from server.apps.game.api.routers import router as game_router
 from server.apps.services.custom_router.api_router import router
@@ -45,6 +46,8 @@ urlpatterns = [
     *docs_urlpatterns,
     *jwt_urlpatterns,
     *seo_urlpatterns,
+    # proxy all other staff to our local frontend app, for development needs
+    re_path(r'(?P<path>.*)', ProxyView.as_view(upstream='http://localhost:3000/')),
 ]
 
 if settings.DEBUG:  # pragma: no cover
@@ -55,10 +58,10 @@ if settings.DEBUG:  # pragma: no cover
         [
             # URLs specific only to django-debug-toolbar:
             path('__debug__/', include(debug_toolbar.urls)),  # noqa: DJ05
-        ] + urlpatterns +
+        ] +
         static(
             # Serving media files in development only:
             settings.MEDIA_URL,
             document_root=settings.MEDIA_ROOT,
-        )
+        ) + urlpatterns
     )

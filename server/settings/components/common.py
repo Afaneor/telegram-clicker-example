@@ -42,6 +42,7 @@ INSTALLED_APPS: Tuple[str, ...] = (
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.staticfiles',
+    'revproxy',
 
 
     # django rest framework
@@ -51,10 +52,12 @@ INSTALLED_APPS: Tuple[str, ...] = (
     'allauth.account',
     'rules',
     'django_celery_beat',
+    'rest_framework.authtoken',
 
     # Your apps go here:
     'server.apps.user',
     'server.apps.game',
+    'server.apps.bot',
 
     # documentation
     'drf_yasg',
@@ -135,8 +138,8 @@ TIME_ZONE = 'UTC'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
-STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR.joinpath('static')
+STATIC_URL = '/static-data/'
+STATIC_ROOT = BASE_DIR.joinpath('static_data')
 
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
@@ -187,7 +190,6 @@ MEDIA_ROOT = BASE_DIR.joinpath('media')
 AUTHENTICATION_BACKENDS = (
     'rules.permissions.ObjectPermissionBackend',
     'django.contrib.auth.backends.ModelBackend',
-    'server.apps.services.authentication_backend.TelegramAuthBackend',
 )
 
 PASSWORD_HASHERS = [
@@ -233,3 +235,6 @@ REST_FRAMEWORK = {
         'rest_framework.filters.SearchFilter',
     ),
 }
+
+TELEGRAM_BOT_TOKEN = ''
+FRONTEND_URL = ''
